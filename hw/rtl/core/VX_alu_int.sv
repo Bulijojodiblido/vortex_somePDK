@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_alu_int #(
-    parameter `STRING INSTANCE_ID = "",
+    // parameter `STRING INSTANCE_ID = "",
     parameter BLOCK_IDX = 0,
     parameter NUM_LANES = 1
 ) (
@@ -29,7 +29,7 @@ module VX_alu_int #(
     VX_branch_ctl_if.master branch_ctl_if
 );
 
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
     localparam LANE_BITS      = `CLOG2(NUM_LANES);
     localparam LANE_WIDTH     = `UP(LANE_BITS);
     localparam PID_BITS       = `CLOG2(`NUM_THREADS / NUM_LANES);
@@ -191,13 +191,13 @@ module VX_alu_int #(
 
     assign commit_if.data.PC = PC_r;
 
-`ifdef DBG_TRACE_PIPELINE
-    always @(posedge clk) begin
-        if (br_enable) begin
-            `TRACE(2, ("%t: %s branch: wid=%0d, PC=0x%0h, taken=%b, dest=0x%0h (#%0d)\n",
-                $time, INSTANCE_ID, br_wid, {commit_if.data.PC, 1'b0}, br_taken, {br_dest, 1'b0}, commit_if.data.uuid))
-        end
-    end
-`endif
+// `ifdef DBG_TRACE_PIPELINE
+//     always @(posedge clk) begin
+//         if (br_enable) begin
+//             `TRACE(2, ("%t: %s branch: wid=%0d, PC=0x%0h, taken=%b, dest=0x%0h (#%0d)\n",
+//                 $time, INSTANCE_ID, br_wid, {commit_if.data.PC, 1'b0}, br_taken, {br_dest, 1'b0}, commit_if.data.uuid))
+//         end
+//     end
+// `endif
 
 endmodule

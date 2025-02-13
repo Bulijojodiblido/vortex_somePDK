@@ -48,22 +48,22 @@ module VX_index_buffer #(
         .full       (full)
     );
 
-    VX_dp_ram #(
-        .DATAW (DATAW),
-        .SIZE  (SIZE),
-        .LUTRAM (LUTRAM),
-        .RDW_MODE ("W")
-    ) data_table (
-        .clk   (clk),
-        .reset (reset),
-        .read  (1'b1),
-        .write (acquire_en),
-        .wren  (1'b1),
-        .waddr (write_addr),
-        .wdata (write_data),
-        .raddr (read_addr),
-        .rdata (read_data)
-    );
+    // VX_dp_ram #(
+    //     .DATAW (DATAW),
+    //     .SIZE  (SIZE),
+    //     .LUTRAM (LUTRAM),
+    //     .RDW_MODE ("W")
+    // ) data_table (
+    //     .clk   (clk),
+    //     .reset (reset),
+    //     .read  (1'b1),
+    //     .write (acquire_en),
+    //     .wren  (1'b1),
+    //     .waddr (write_addr),
+    //     .wdata (write_data),
+    //     .raddr (read_addr),
+    //     .rdata (read_data)
+    // );
 
 endmodule
 `TRACING_ON

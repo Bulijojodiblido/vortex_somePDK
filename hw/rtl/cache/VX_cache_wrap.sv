@@ -14,7 +14,7 @@
 `include "VX_cache_define.vh"
 
 module VX_cache_wrap import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID    = "",
+    // parameter `STRING INSTANCE_ID    = "",
 
     parameter TAG_SEL_IDX           = 0,
 
@@ -168,7 +168,7 @@ module VX_cache_wrap import VX_gpu_pkg::*; #(
     if (PASSTHRU == 0) begin : g_cache
 
         VX_cache #(
-            .INSTANCE_ID  (INSTANCE_ID),
+            // .INSTANCE_ID  (INSTANCE_ID),
             .CACHE_SIZE   (CACHE_SIZE),
             .LINE_SIZE    (LINE_SIZE),
             .NUM_BANKS    (NUM_BANKS),
@@ -267,39 +267,39 @@ module VX_cache_wrap import VX_gpu_pkg::*; #(
 
     end
 
-`ifdef DBG_TRACE_CACHE
-    for (genvar i = 0; i < NUM_REQS; ++i) begin : g_trace_core
-        always @(posedge clk) begin
-            if (core_bus_if[i].req_valid && core_bus_if[i].req_ready) begin
-                if (core_bus_if[i].req_data.rw) begin
-                    `TRACE(2, ("%t: %s core-wr-req[%0d]: addr=0x%0h, tag=0x%0h, byteen=0x%h, data=0x%h (#%0d)\n", $time, INSTANCE_ID, i, `TO_FULL_ADDR(core_bus_if[i].req_data.addr), core_bus_if[i].req_data.tag.value, core_bus_if[i].req_data.byteen, core_bus_if[i].req_data.data, core_bus_if[i].req_data.tag.uuid))
-                end else begin
-                    `TRACE(2, ("%t: %s core-rd-req[%0d]: addr=0x%0h, tag=0x%0h (#%0d)\n", $time, INSTANCE_ID, i, `TO_FULL_ADDR(core_bus_if[i].req_data.addr), core_bus_if[i].req_data.tag.value, core_bus_if[i].req_data.tag.uuid))
-                end
-            end
-            if (core_bus_if[i].rsp_valid && core_bus_if[i].rsp_ready) begin
-                `TRACE(2, ("%t: %s core-rd-rsp[%0d]: tag=0x%0h, data=0x%h (#%0d)\n", $time, INSTANCE_ID, i, core_bus_if[i].rsp_data.tag.value, core_bus_if[i].rsp_data.data, core_bus_if[i].rsp_data.tag.uuid))
-            end
-        end
-    end
+// `ifdef DBG_TRACE_CACHE
+//     for (genvar i = 0; i < NUM_REQS; ++i) begin : g_trace_core
+//         always @(posedge clk) begin
+//             if (core_bus_if[i].req_valid && core_bus_if[i].req_ready) begin
+//                 if (core_bus_if[i].req_data.rw) begin
+//                     `TRACE(2, ("%t: %s core-wr-req[%0d]: addr=0x%0h, tag=0x%0h, byteen=0x%h, data=0x%h (#%0d)\n", $time, INSTANCE_ID, i, `TO_FULL_ADDR(core_bus_if[i].req_data.addr), core_bus_if[i].req_data.tag.value, core_bus_if[i].req_data.byteen, core_bus_if[i].req_data.data, core_bus_if[i].req_data.tag.uuid))
+//                 end else begin
+//                     `TRACE(2, ("%t: %s core-rd-req[%0d]: addr=0x%0h, tag=0x%0h (#%0d)\n", $time, INSTANCE_ID, i, `TO_FULL_ADDR(core_bus_if[i].req_data.addr), core_bus_if[i].req_data.tag.value, core_bus_if[i].req_data.tag.uuid))
+//                 end
+//             end
+//             if (core_bus_if[i].rsp_valid && core_bus_if[i].rsp_ready) begin
+//                 `TRACE(2, ("%t: %s core-rd-rsp[%0d]: tag=0x%0h, data=0x%h (#%0d)\n", $time, INSTANCE_ID, i, core_bus_if[i].rsp_data.tag.value, core_bus_if[i].rsp_data.data, core_bus_if[i].rsp_data.tag.uuid))
+//             end
+//         end
+//     end
 
-    for (genvar i = 0; i < MEM_PORTS; ++i) begin : g_trace_mem
-        always @(posedge clk) begin
-            if (mem_bus_if[i].req_valid && mem_bus_if[i].req_ready) begin
-                if (mem_bus_if[i].req_data.rw) begin
-                    `TRACE(2, ("%t: %s mem-wr-req[%0d]: addr=0x%0h, tag=0x%0h, byteen=0x%h, data=0x%h (#%0d)\n",
-                        $time, INSTANCE_ID, i, `TO_FULL_ADDR(mem_bus_if[i].req_data.addr), mem_bus_if[i].req_data.tag.value, mem_bus_if[i].req_data.byteen, mem_bus_if[i].req_data.data, mem_bus_if[i].req_data.tag.uuid))
-                end else begin
-                    `TRACE(2, ("%t: %s mem-rd-req[%0d]: addr=0x%0h, tag=0x%0h (#%0d)\n",
-                        $time, INSTANCE_ID, i, `TO_FULL_ADDR(mem_bus_if[i].req_data.addr), mem_bus_if[i].req_data.tag.value, mem_bus_if[i].req_data.tag.uuid))
-                end
-            end
-            if (mem_bus_if[i].rsp_valid && mem_bus_if[i].rsp_ready) begin
-                `TRACE(2, ("%t: %s mem-rd-rsp[%0d]: data=0x%h, tag=0x%0h (#%0d)\n",
-                    $time, INSTANCE_ID, i, mem_bus_if[i].rsp_data.data, mem_bus_if[i].rsp_data.tag.value, mem_bus_if[i].rsp_data.tag.uuid))
-            end
-        end
-    end
-`endif
+//     for (genvar i = 0; i < MEM_PORTS; ++i) begin : g_trace_mem
+//         always @(posedge clk) begin
+//             if (mem_bus_if[i].req_valid && mem_bus_if[i].req_ready) begin
+//                 if (mem_bus_if[i].req_data.rw) begin
+//                     `TRACE(2, ("%t: %s mem-wr-req[%0d]: addr=0x%0h, tag=0x%0h, byteen=0x%h, data=0x%h (#%0d)\n",
+//                         $time, INSTANCE_ID, i, `TO_FULL_ADDR(mem_bus_if[i].req_data.addr), mem_bus_if[i].req_data.tag.value, mem_bus_if[i].req_data.byteen, mem_bus_if[i].req_data.data, mem_bus_if[i].req_data.tag.uuid))
+//                 end else begin
+//                     `TRACE(2, ("%t: %s mem-rd-req[%0d]: addr=0x%0h, tag=0x%0h (#%0d)\n",
+//                         $time, INSTANCE_ID, i, `TO_FULL_ADDR(mem_bus_if[i].req_data.addr), mem_bus_if[i].req_data.tag.value, mem_bus_if[i].req_data.tag.uuid))
+//                 end
+//             end
+//             if (mem_bus_if[i].rsp_valid && mem_bus_if[i].rsp_ready) begin
+//                 `TRACE(2, ("%t: %s mem-rd-rsp[%0d]: data=0x%h, tag=0x%0h (#%0d)\n",
+//                     $time, INSTANCE_ID, i, mem_bus_if[i].rsp_data.data, mem_bus_if[i].rsp_data.tag.value, mem_bus_if[i].rsp_data.tag.uuid))
+//             end
+//         end
+//     end
+// `endif
 
 endmodule

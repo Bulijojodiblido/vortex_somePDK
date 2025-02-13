@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_schedule import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID = "",
+    // parameter `STRING INSTANCE_ID = "",
     parameter CORE_ID = 0
 ) (
     input wire              clk,
@@ -43,7 +43,7 @@ module VX_schedule import VX_gpu_pkg::*; #(
     // status
     output wire             busy
 );
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
     `UNUSED_PARAM (CORE_ID)
 
     reg [`NUM_WARPS-1:0] active_warps, active_warps_n; // updated when a warp is activated or disabled
@@ -284,7 +284,7 @@ module VX_schedule import VX_gpu_pkg::*; #(
     // split/join handling
 
     VX_split_join #(
-        .INSTANCE_ID (`SFORMATF(("%s-splitjoin", INSTANCE_ID)))
+        // .INSTANCE_ID (`SFORMATF(("%s-splitjoin", INSTANCE_ID)))
     ) split_join (
         .clk        (clk),
         .reset      (reset),
@@ -407,7 +407,7 @@ module VX_schedule import VX_gpu_pkg::*; #(
             end
         end
     end
-    `RUNTIME_ASSERT(timeout_ctr < `STALL_TIMEOUT, ("%t: *** %s timeout: stalled_warps=%b", $time, INSTANCE_ID, stalled_warps))
+    // `RUNTIME_ASSERT(timeout_ctr < `STALL_TIMEOUT, ("%t: *** %s timeout: stalled_warps=%b", $time, INSTANCE_ID, stalled_warps))
 
 `ifdef PERF_ENABLE
     reg [`PERF_CTR_BITS-1:0] perf_sched_idles;

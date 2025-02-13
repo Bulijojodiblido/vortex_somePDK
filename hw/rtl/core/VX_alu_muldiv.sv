@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_alu_muldiv #(
-    parameter `STRING INSTANCE_ID = "",
+    // parameter `STRING INSTANCE_ID = "",
     parameter NUM_LANES = 1
 ) (
     input wire          clk,
@@ -26,7 +26,7 @@ module VX_alu_muldiv #(
     // Outputs
     VX_commit_if.master commit_if
 );
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
     localparam PID_BITS  = `CLOG2(`NUM_THREADS / NUM_LANES);
     localparam PID_WIDTH = `UP(PID_BITS);
     localparam TAG_WIDTH = `UUID_WIDTH + `NW_WIDTH + NUM_LANES + `PC_BITS + `NR_BITS + 1 + PID_WIDTH + 1 + 1;

@@ -109,44 +109,44 @@ module VX_scope_tap #(
             assign data_in  = {probes, htriggers};
         end
         assign do_capture = dflush || (xtriggers != prev_xtrig) || (htriggers != prev_htrig) || (htriggers != '0);
-        VX_dp_ram #(
-            .DATAW (IDLE_CTRW),
-            .SIZE  (DEPTH),
-            .OUT_REG (1),
-            .RDW_MODE ("R")
-        ) delta_store (
-            .clk   (clk),
-            .reset (reset),
-            .read  (1'b1),
-            .wren  (1'b1),
-            .write (write_en),
-            .waddr (waddr[ADDRW-1:0]),
-            .wdata (delta),
-            .raddr (raddr),
-            .rdata (delta_value)
-        );
+        // VX_dp_ram #(
+        //     .DATAW (IDLE_CTRW),
+        //     .SIZE  (DEPTH),
+        //     .OUT_REG (1),
+        //     .RDW_MODE ("R")
+        // ) delta_store (
+        //     .clk   (clk),
+        //     .reset (reset),
+        //     .read  (1'b1),
+        //     .wren  (1'b1),
+        //     .write (write_en),
+        //     .waddr (waddr[ADDRW-1:0]),
+        //     .wdata (delta),
+        //     .raddr (raddr),
+        //     .rdata (delta_value)
+        // );
     end else begin : g_no_delta_store
         assign data_in = probes;
         assign delta_value = '0;
         assign do_capture = 1;
     end
 
-    VX_dp_ram #(
-        .DATAW (DATAW),
-        .SIZE  (DEPTH),
-        .OUT_REG (1),
-        .RDW_MODE ("R")
-    ) data_store (
-        .clk   (clk),
-        .reset (reset),
-        .read  (1'b1),
-        .wren  (1'b1),
-        .write (write_en),
-        .waddr (waddr[ADDRW-1:0]),
-        .wdata (data_in),
-        .raddr (raddr),
-        .rdata (data_value)
-    );
+    // VX_dp_ram #(
+    //     .DATAW (DATAW),
+    //     .SIZE  (DEPTH),
+    //     .OUT_REG (1),
+    //     .RDW_MODE ("R")
+    // ) data_store (
+    //     .clk   (clk),
+    //     .reset (reset),
+    //     .read  (1'b1),
+    //     .wren  (1'b1),
+    //     .write (write_en),
+    //     .waddr (waddr[ADDRW-1:0]),
+    //     .wdata (data_in),
+    //     .raddr (raddr),
+    //     .rdata (data_value)
+    // );
 
     always @(posedge clk) begin
         if (reset) begin

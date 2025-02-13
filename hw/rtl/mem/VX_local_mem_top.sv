@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_local_mem_top import VX_gpu_pkg::*; #(
-    parameter `STRING  INSTANCE_ID = "",
+    // parameter `STRING  INSTANCE_ID = "",
 
     // Size of cache in bytes
     parameter SIZE              = (1024*16*8),
@@ -85,7 +85,7 @@ module VX_local_mem_top import VX_gpu_pkg::*; #(
     end
 
     VX_local_mem #(
-        .INSTANCE_ID(INSTANCE_ID),
+        // .INSTANCE_ID(INSTANCE_ID),
         .SIZE       (SIZE),
         .NUM_REQS   (NUM_REQS),
         .NUM_BANKS  (NUM_BANKS),

@@ -21,7 +21,7 @@
 `endif
 
 module VX_operands import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID = "",
+    // parameter `STRING INSTANCE_ID = "",
     parameter NUM_BANKS = 4,
     parameter OUT_BUF   = 3
 ) (
@@ -36,7 +36,7 @@ module VX_operands import VX_gpu_pkg::*; #(
     VX_scoreboard_if.slave  scoreboard_if,
     VX_operands_if.master   operands_if
 );
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
     localparam NUM_SRC_OPDS = 3;
     localparam REQ_SEL_BITS = `CLOG2(NUM_SRC_OPDS);
     localparam REQ_SEL_WIDTH = `UP(REQ_SEL_BITS);
@@ -262,26 +262,26 @@ module VX_operands import VX_gpu_pkg::*; #(
             assign wren[i*XLEN_SIZE+:XLEN_SIZE] = {XLEN_SIZE{writeback_if.data.tmask[i]}};
         end
 
-        VX_dp_ram #(
-            .DATAW (REGS_DATAW),
-            .SIZE  (PER_BANK_REGS * PER_ISSUE_WARPS),
-            .WRENW (BYTEENW),
-         `ifdef GPR_RESET
-            .RESET_RAM (1),
-         `endif
-            .OUT_REG (1),
-            .RDW_MODE ("R")
-        ) gpr_ram (
-            .clk   (clk),
-            .reset (reset),
-            .read  (pipe_fire_st1),
-            .wren  (wren),
-            .write (gpr_wr_enabled),
-            .waddr (gpr_wr_addr),
-            .wdata (writeback_if.data.data),
-            .raddr (gpr_rd_addr_st1[b]),
-            .rdata (gpr_rd_data_st2[b])
-        );
+        // VX_dp_ram #(
+        //     .DATAW (REGS_DATAW),
+        //     .SIZE  (PER_BANK_REGS * PER_ISSUE_WARPS),
+        //     .WRENW (BYTEENW),
+        //  `ifdef GPR_RESET
+        //     .RESET_RAM (1),
+        //  `endif
+        //     .OUT_REG (1),
+        //     .RDW_MODE ("R")
+        // ) gpr_ram (
+        //     .clk   (clk),
+        //     .reset (reset),
+        //     .read  (pipe_fire_st1),
+        //     .wren  (wren),
+        //     .write (gpr_wr_enabled),
+        //     .waddr (gpr_wr_addr),
+        //     .wdata (writeback_if.data.data),
+        //     .raddr (gpr_rd_addr_st1[b]),
+        //     .rdata (gpr_rd_data_st2[b])
+        // );
     end
 
 `ifdef PERF_ENABLE

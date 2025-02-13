@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_fetch import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID = ""
+    // parameter `STRING INSTANCE_ID = ""
 ) (
     `SCOPE_IO_DECL
 
@@ -30,7 +30,7 @@ module VX_fetch import VX_gpu_pkg::*; #(
     // outputs
     VX_fetch_if.master      fetch_if
 );
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
     `UNUSED_VAR (reset)
 
     wire icache_req_valid;
@@ -50,22 +50,22 @@ module VX_fetch import VX_gpu_pkg::*; #(
     wire [`PC_BITS-1:0] rsp_PC;
     wire [`NUM_THREADS-1:0] rsp_tmask;
 
-    VX_dp_ram #(
-        .DATAW (`PC_BITS + `NUM_THREADS),
-        .SIZE  (`NUM_WARPS),
-        .RDW_MODE ("R"),
-        .LUTRAM (1)
-    ) tag_store (
-        .clk   (clk),
-        .reset (reset),
-        .read  (1'b1),
-        .write (icache_req_fire),
-        .wren  (1'b1),
-        .waddr (req_tag),
-        .wdata ({schedule_if.data.PC, schedule_if.data.tmask}),
-        .raddr (rsp_tag),
-        .rdata ({rsp_PC, rsp_tmask})
-    );
+    // VX_dp_ram #(
+    //     .DATAW (`PC_BITS + `NUM_THREADS),
+    //     .SIZE  (`NUM_WARPS),
+    //     .RDW_MODE ("R"),
+    //     .LUTRAM (1)
+    // ) tag_store (
+    //     .clk   (clk),
+    //     .reset (reset),
+    //     .read  (1'b1),
+    //     .write (icache_req_fire),
+    //     .wren  (1'b1),
+    //     .waddr (req_tag),
+    //     .wdata ({schedule_if.data.PC, schedule_if.data.tmask}),
+    //     .raddr (rsp_tag),
+    //     .rdata ({rsp_PC, rsp_tmask})
+    // );
 
 `ifndef L1_ENABLE
     // Ensure that the ibuffer doesn't fill up.
@@ -92,8 +92,8 @@ module VX_fetch import VX_gpu_pkg::*; #(
     wire ibuf_ready = 1'b1;
 `endif
 
-    `RUNTIME_ASSERT((!schedule_if.valid || schedule_if.data.PC != 0),
-        ("%t: *** %s invalid PC=0x%0h, wid=%0d, tmask=%b (#%0d)", $time, INSTANCE_ID, {schedule_if.data.PC, 1'b0}, schedule_if.data.wid, schedule_if.data.tmask, schedule_if.data.uuid))
+    // `RUNTIME_ASSERT((!schedule_if.valid || schedule_if.data.PC != 0),
+    //     ("%t: *** %s invalid PC=0x%0h, wid=%0d, tmask=%b (#%0d)", $time, INSTANCE_ID, {schedule_if.data.PC, 1'b0}, schedule_if.data.wid, schedule_if.data.tmask, schedule_if.data.uuid))
 
     // Icache Request
 
@@ -178,15 +178,15 @@ module VX_fetch import VX_gpu_pkg::*; #(
 `endif
 `endif
 
-`ifdef DBG_TRACE_MEM
-    always @(posedge clk) begin
-        if (schedule_if.valid && schedule_if.ready) begin
-            `TRACE(1, ("%t: %s req: wid=%0d, PC=0x%0h, tmask=%b (#%0d)\n", $time, INSTANCE_ID, schedule_if.data.wid, {schedule_if.data.PC, 1'b0}, schedule_if.data.tmask, schedule_if.data.uuid))
-        end
-        if (fetch_if.valid && fetch_if.ready) begin
-            `TRACE(1, ("%t: %s rsp: wid=%0d, PC=0x%0h, tmask=%b, instr=0x%0h (#%0d)\n", $time, INSTANCE_ID, fetch_if.data.wid, {fetch_if.data.PC, 1'b0}, fetch_if.data.tmask, fetch_if.data.instr, fetch_if.data.uuid))
-        end
-    end
-`endif
+// `ifdef DBG_TRACE_MEM
+//     always @(posedge clk) begin
+//         if (schedule_if.valid && schedule_if.ready) begin
+//             `TRACE(1, ("%t: %s req: wid=%0d, PC=0x%0h, tmask=%b (#%0d)\n", $time, INSTANCE_ID, schedule_if.data.wid, {schedule_if.data.PC, 1'b0}, schedule_if.data.tmask, schedule_if.data.uuid))
+//         end
+//         if (fetch_if.valid && fetch_if.ready) begin
+//             `TRACE(1, ("%t: %s rsp: wid=%0d, PC=0x%0h, tmask=%b, instr=0x%0h (#%0d)\n", $time, INSTANCE_ID, fetch_if.data.wid, {fetch_if.data.PC, 1'b0}, fetch_if.data.tmask, fetch_if.data.instr, fetch_if.data.uuid))
+//         end
+//     end
+// `endif
 
 endmodule

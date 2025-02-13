@@ -17,9 +17,32 @@
 `include "VX_fpu_define.vh"
 `endif
 
+`include "VX_schedule_if.sv"
+`include "VX_fetch_if.sv"
+`include "VX_decode_if.sv"
+`include "VX_sched_csr_if.sv"
+`include "VX_decode_sched_if.sv"
+`include "VX_commit_sched_if.sv"
+`include "VX_commit_csr_if.sv"
+`include "VX_branch_ctl_if.sv"
+`include "VX_warp_ctl_if.sv"
+`include "VX_dispatch_if.sv"
+`include "VX_commit_if.sv"
+`include "VX_writeback_if.sv"
+`include "VX_lsu_mem_if.sv"
+
+`include "VX_dcr_data.sv"
+`include "VX_schedule.sv"
+`include "VX_fetch.sv"
+`include "VX_decode.sv"
+`include "VX_issue.sv"
+`include "VX_execute.sv"
+`include "VX_commit.sv"
+`include "VX_mem_unit.sv"
+
 module VX_core import VX_gpu_pkg::*; #(
-    parameter CORE_ID = 0,
-    parameter `STRING INSTANCE_ID = ""
+    parameter CORE_ID = 0//,
+    // parameter `STRING INSTANCE_ID = ""
 ) (
     `SCOPE_IO_DECL
 
@@ -88,7 +111,7 @@ module VX_core import VX_gpu_pkg::*; #(
     `SCOPE_IO_SWITCH (3);
 
     VX_schedule #(
-        .INSTANCE_ID (`SFORMATF(("%s-schedule", INSTANCE_ID))),
+        // .INSTANCE_ID (`SFORMATF(("%s-schedule", INSTANCE_ID))),
         .CORE_ID (CORE_ID)
     ) schedule (
         .clk            (clk),
@@ -116,7 +139,7 @@ module VX_core import VX_gpu_pkg::*; #(
     );
 
     VX_fetch #(
-        .INSTANCE_ID (`SFORMATF(("%s-fetch", INSTANCE_ID)))
+        // .INSTANCE_ID (`SFORMATF(("%s-fetch", INSTANCE_ID)))
     ) fetch (
         `SCOPE_IO_BIND  (0)
         .clk            (clk),
@@ -127,7 +150,7 @@ module VX_core import VX_gpu_pkg::*; #(
     );
 
     VX_decode #(
-        .INSTANCE_ID (`SFORMATF(("%s-decode", INSTANCE_ID)))
+        // .INSTANCE_ID (`SFORMATF(("%s-decode", INSTANCE_ID)))
     ) decode (
         .clk            (clk),
         .reset          (reset),
@@ -137,7 +160,7 @@ module VX_core import VX_gpu_pkg::*; #(
     );
 
     VX_issue #(
-        .INSTANCE_ID (`SFORMATF(("%s-issue", INSTANCE_ID)))
+        // .INSTANCE_ID (`SFORMATF(("%s-issue", INSTANCE_ID)))
     ) issue (
         `SCOPE_IO_BIND  (1)
 
@@ -154,7 +177,7 @@ module VX_core import VX_gpu_pkg::*; #(
     );
 
     VX_execute #(
-        .INSTANCE_ID (`SFORMATF(("%s-execute", INSTANCE_ID))),
+        // .INSTANCE_ID (`SFORMATF(("%s-execute", INSTANCE_ID))),
         .CORE_ID (CORE_ID)
     ) execute (
         `SCOPE_IO_BIND  (2)
@@ -182,7 +205,7 @@ module VX_core import VX_gpu_pkg::*; #(
     );
 
     VX_commit #(
-        .INSTANCE_ID (`SFORMATF(("%s-commit", INSTANCE_ID)))
+        // .INSTANCE_ID (`SFORMATF(("%s-commit", INSTANCE_ID)))
     ) commit (
         .clk            (clk),
         .reset          (reset),
@@ -196,7 +219,7 @@ module VX_core import VX_gpu_pkg::*; #(
     );
 
     VX_mem_unit #(
-        .INSTANCE_ID (INSTANCE_ID)
+        // .INSTANCE_ID (INSTANCE_ID)
     ) mem_unit (
         .clk           (clk),
         .reset         (reset),

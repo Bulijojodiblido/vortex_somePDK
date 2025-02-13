@@ -72,22 +72,22 @@ module VX_ipdom_stack #(
 
     wire [WIDTH * 2:0] qout = push ? {1'b0, q1, q0} : {1'b1, d1, d0};
 
-    VX_dp_ram #(
-        .DATAW (1 + WIDTH * 2),
-        .SIZE (DEPTH),
-        .OUT_REG (1),
-        .RDW_MODE ("R")
-    ) ipdom_store (
-        .clk   (clk),
-        .reset (reset),
-        .read  (1'b1),
-        .write (push || pop),
-        .wren  (1'b1),
-        .waddr (push ? wr_ptr : rd_ptr),
-        .wdata (qout),
-        .raddr (rd_ptr_n),
-        .rdata ({d_set_r, d1, d0})
-    );
+    // VX_dp_ram #(
+    //     .DATAW (1 + WIDTH * 2),
+    //     .SIZE (DEPTH),
+    //     .OUT_REG (1),
+    //     .RDW_MODE ("R")
+    // ) ipdom_store (
+    //     .clk   (clk),
+    //     .reset (reset),
+    //     .read  (1'b1),
+    //     .write (push || pop),
+    //     .wren  (1'b1),
+    //     .waddr (push ? wr_ptr : rd_ptr),
+    //     .wdata (qout),
+    //     .raddr (rd_ptr_n),
+    //     .rdata ({d_set_r, d1, d0})
+    // );
 
     assign d     = d_set_r ? d0 : d1;
     assign d_set = ~d_set_r;

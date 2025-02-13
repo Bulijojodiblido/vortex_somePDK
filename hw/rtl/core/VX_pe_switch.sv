@@ -18,7 +18,7 @@ module VX_pe_switch import VX_gpu_pkg::*; #(
     parameter NUM_LANES       = 0,
     parameter REQ_OUT_BUF     = 0,
     parameter RSP_OUT_BUF     = 0,
-    parameter `STRING ARBITER = "R",
+    parameter ARBITER = 1,
     parameter PE_SEL_BITS = `CLOG2(PE_COUNT)
 ) (
     input wire          clk,

@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_issue_slice import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID = "",
+    // parameter `STRING INSTANCE_ID = "",
     parameter ISSUE_ID = 0
 ) (
     `SCOPE_IO_DECL
@@ -37,7 +37,7 @@ module VX_issue_slice import VX_gpu_pkg::*; #(
     VX_operands_if operands_if();
 
     VX_ibuffer #(
-        .INSTANCE_ID (`SFORMATF(("%s-ibuffer", INSTANCE_ID)))
+        // .INSTANCE_ID (`SFORMATF(("%s-ibuffer", INSTANCE_ID)))
     ) ibuffer (
         .clk            (clk),
         .reset          (reset),
@@ -49,7 +49,7 @@ module VX_issue_slice import VX_gpu_pkg::*; #(
     );
 
     VX_scoreboard #(
-        .INSTANCE_ID (`SFORMATF(("%s-scoreboard", INSTANCE_ID)))
+        // .INSTANCE_ID (`SFORMATF(("%s-scoreboard", INSTANCE_ID)))
     ) scoreboard (
         .clk            (clk),
         .reset          (reset),
@@ -64,7 +64,7 @@ module VX_issue_slice import VX_gpu_pkg::*; #(
     );
 
     VX_operands #(
-        .INSTANCE_ID (`SFORMATF(("%s-operands", INSTANCE_ID)))
+        // .INSTANCE_ID (`SFORMATF(("%s-operands", INSTANCE_ID)))
     ) operands (
         .clk            (clk),
         .reset          (reset),
@@ -77,7 +77,7 @@ module VX_issue_slice import VX_gpu_pkg::*; #(
     );
 
     VX_dispatch #(
-        .INSTANCE_ID (`SFORMATF(("%s-dispatch", INSTANCE_ID)))
+        // .INSTANCE_ID (`SFORMATF(("%s-dispatch", INSTANCE_ID)))
     ) dispatch (
         .clk            (clk),
         .reset          (reset),
@@ -157,23 +157,23 @@ module VX_issue_slice import VX_gpu_pkg::*; #(
 `endif
 `endif
 
-`ifdef DBG_TRACE_PIPELINE
-    always @(posedge clk) begin
-        if (operands_if.valid && operands_if.ready) begin
-            `TRACE(1, ("%t: %s: wid=%0d, PC=0x%0h, ex=", $time, INSTANCE_ID, wis_to_wid(operands_if.data.wis, ISSUE_ID), {operands_if.data.PC, 1'b0}))
-            trace_ex_type(1, operands_if.data.ex_type);
-            `TRACE(1, (", op="))
-            trace_ex_op(1, operands_if.data.ex_type, operands_if.data.op_type, operands_if.data.op_args);
-            `TRACE(1, (", tmask=%b, wb=%b, rd=%0d, rs1_data=", operands_if.data.tmask, operands_if.data.wb, operands_if.data.rd))
-            `TRACE_ARRAY1D(1, "0x%0h", operands_if.data.rs1_data, `NUM_THREADS)
-            `TRACE(1, (", rs2_data="))
-            `TRACE_ARRAY1D(1, "0x%0h", operands_if.data.rs2_data, `NUM_THREADS)
-            `TRACE(1, (", rs3_data="))
-            `TRACE_ARRAY1D(1, "0x%0h", operands_if.data.rs3_data, `NUM_THREADS)
-            trace_op_args(1, operands_if.data.ex_type, operands_if.data.op_type, operands_if.data.op_args);
-            `TRACE(1, (" (#%0d)\n", operands_if.data.uuid))
-        end
-    end
-`endif
+// `ifdef DBG_TRACE_PIPELINE
+//     always @(posedge clk) begin
+//         if (operands_if.valid && operands_if.ready) begin
+//             `TRACE(1, ("%t: %s: wid=%0d, PC=0x%0h, ex=", $time, INSTANCE_ID, wis_to_wid(operands_if.data.wis, ISSUE_ID), {operands_if.data.PC, 1'b0}))
+//             trace_ex_type(1, operands_if.data.ex_type);
+//             `TRACE(1, (", op="))
+//             trace_ex_op(1, operands_if.data.ex_type, operands_if.data.op_type, operands_if.data.op_args);
+//             `TRACE(1, (", tmask=%b, wb=%b, rd=%0d, rs1_data=", operands_if.data.tmask, operands_if.data.wb, operands_if.data.rd))
+//             `TRACE_ARRAY1D(1, "0x%0h", operands_if.data.rs1_data, `NUM_THREADS)
+//             `TRACE(1, (", rs2_data="))
+//             `TRACE_ARRAY1D(1, "0x%0h", operands_if.data.rs2_data, `NUM_THREADS)
+//             `TRACE(1, (", rs3_data="))
+//             `TRACE_ARRAY1D(1, "0x%0h", operands_if.data.rs3_data, `NUM_THREADS)
+//             trace_op_args(1, operands_if.data.ex_type, operands_if.data.op_type, operands_if.data.op_args);
+//             `TRACE(1, (" (#%0d)\n", operands_if.data.uuid))
+//         end
+//     end
+// `endif
 
 endmodule

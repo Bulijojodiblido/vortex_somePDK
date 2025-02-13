@@ -221,7 +221,7 @@ module VX_async_ram_patch #(
         VX_placeholder #(
             .O (1)
         ) placeholder2 (
-            .in  (1'b0),
+            .in  (),
             .out (is_raddr_reg)
         );
         wire [DATAW-1:0] rdata_a;

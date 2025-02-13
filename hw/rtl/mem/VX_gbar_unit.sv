@@ -14,14 +14,14 @@
 `include "VX_define.vh"
 
 module VX_gbar_unit #(
-    parameter `STRING INSTANCE_ID = ""
+    // parameter `STRING INSTANCE_ID = ""
 ) (
     input wire clk,
     input wire reset,
 
     VX_gbar_bus_if.slave gbar_bus_if
 );
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
 
     reg [`NB_WIDTH-1:0][`NUM_CORES-1:0] barrier_masks;
     wire [`CLOG2(`NUM_CORES+1)-1:0] active_barrier_count;
@@ -57,16 +57,16 @@ module VX_gbar_unit #(
     assign gbar_bus_if.rsp_data.id = rsp_bar_id;
     assign gbar_bus_if.req_ready = 1; // global barrier unit is always ready (no dependencies)
 
-`ifdef DBG_TRACE_GBAR
-    always @(posedge clk) begin
-        if (gbar_bus_if.req_valid && gbar_bus_if.req_ready) begin
-            `TRACE(2, ("%t: %s acquire: bar_id=%0d, size=%0d, core_id=%0d\n",
-                $time, INSTANCE_ID, gbar_bus_if.req_data.id, gbar_bus_if.req_data.size_m1, gbar_bus_if.req_data.core_id))
-        end
-        if (gbar_bus_if.rsp_valid) begin
-            `TRACE(2, ("%t: %s release: bar_id=%0d\n", $time, INSTANCE_ID, gbar_bus_if.rsp_data.id))
-        end
-    end
-`endif
+// `ifdef DBG_TRACE_GBAR
+//     always @(posedge clk) begin
+//         if (gbar_bus_if.req_valid && gbar_bus_if.req_ready) begin
+//             `TRACE(2, ("%t: %s acquire: bar_id=%0d, size=%0d, core_id=%0d\n",
+//                 $time, INSTANCE_ID, gbar_bus_if.req_data.id, gbar_bus_if.req_data.size_m1, gbar_bus_if.req_data.core_id))
+//         end
+//         if (gbar_bus_if.rsp_valid) begin
+//             `TRACE(2, ("%t: %s release: bar_id=%0d\n", $time, INSTANCE_ID, gbar_bus_if.rsp_data.id))
+//         end
+//     end
+// `endif
 
 endmodule

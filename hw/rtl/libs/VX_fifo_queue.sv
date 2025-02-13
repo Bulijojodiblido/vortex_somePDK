@@ -90,24 +90,24 @@ module VX_fifo_queue #(
             end
         end
 
-        VX_dp_ram #(
-            .DATAW (DATAW),
-            .SIZE  (DEPTH),
-            .LUTRAM (LUTRAM),
-            .RDW_MODE ("W"),
-            .RADDR_REG (1),
-            .RADDR_RESET (1)
-        ) dp_ram (
-            .clk   (clk),
-            .reset (reset),
-            .read  (1'b1),
-            .write (push),
-            .wren  (1'b1),
-            .raddr (rd_ptr_r),
-            .waddr (wr_ptr_r),
-            .wdata (data_in),
-            .rdata (data_out_w)
-        );
+        // VX_dp_ram #(
+        //     .DATAW (DATAW),
+        //     .SIZE  (DEPTH),
+        //     .LUTRAM (LUTRAM),
+        //     .RDW_MODE ("W"),
+        //     .RADDR_REG (1),
+        //     .RADDR_RESET (1)
+        // ) dp_ram (
+        //     .clk   (clk),
+        //     .reset (reset),
+        //     .read  (1'b1),
+        //     .write (push),
+        //     .wren  (1'b1),
+        //     .raddr (rd_ptr_r),
+        //     .waddr (wr_ptr_r),
+        //     .wdata (data_in),
+        //     .rdata (data_out_w)
+        // );
 
         if (OUT_REG != 0) begin : g_out_reg
             reg [DATAW-1:0] data_out_r;

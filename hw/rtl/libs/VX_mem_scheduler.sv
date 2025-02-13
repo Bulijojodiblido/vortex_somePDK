@@ -15,7 +15,7 @@
 
 `TRACING_OFF
 module VX_mem_scheduler #(
-    parameter `STRING INSTANCE_ID = "",
+    // parameter `STRING INSTANCE_ID = "",
     parameter CORE_REQS     = 1,
     parameter MEM_CHANNELS  = 1,
     parameter WORD_SIZE     = 4,
@@ -224,7 +224,7 @@ module VX_mem_scheduler #(
     if (COALESCE_ENABLE) begin : g_coalescer
 
         VX_mem_coalescer #(
-            .INSTANCE_ID    (`SFORMATF(("%s-coalescer", INSTANCE_ID))),
+            // .INSTANCE_ID    (`SFORMATF(("%s-coalescer", INSTANCE_ID))),
             .NUM_REQS       (CORE_REQS),
             .DATA_IN_SIZE   (WORD_SIZE),
             .DATA_OUT_SIZE  (LINE_SIZE),
@@ -547,106 +547,106 @@ module VX_mem_scheduler #(
         .ready_out (core_rsp_ready)
     );
 
-`ifdef SIMULATION
-    wire [`UP(UUID_WIDTH)-1:0] req_dbg_uuid;
+// `ifdef SIMULATION
+//     wire [`UP(UUID_WIDTH)-1:0] req_dbg_uuid;
 
-    if (UUID_WIDTH != 0) begin : g_req_dbg_uuid
-        assign req_dbg_uuid = core_req_tag[TAG_WIDTH-1 -: UUID_WIDTH];
-    end else begin : g_req_dbg_uuid_0
-        assign req_dbg_uuid = '0;
-    end
+//     if (UUID_WIDTH != 0) begin : g_req_dbg_uuid
+//         assign req_dbg_uuid = core_req_tag[TAG_WIDTH-1 -: UUID_WIDTH];
+//     end else begin : g_req_dbg_uuid_0
+//         assign req_dbg_uuid = '0;
+//     end
 
-    reg [(`UP(UUID_WIDTH) + TAG_ID_WIDTH + 64)-1:0] pending_reqs_time [CORE_QUEUE_SIZE-1:0];
-    reg [CORE_QUEUE_SIZE-1:0] pending_reqs_valid;
+//     reg [(`UP(UUID_WIDTH) + TAG_ID_WIDTH + 64)-1:0] pending_reqs_time [CORE_QUEUE_SIZE-1:0];
+//     reg [CORE_QUEUE_SIZE-1:0] pending_reqs_valid;
 
-    always @(posedge clk) begin
-        if (reset) begin
-            pending_reqs_valid <= '0;
-        end else begin
-            if (ibuf_push) begin
-                pending_reqs_valid[ibuf_waddr] <= 1'b1;
-            end
-            if (ibuf_pop) begin
-                pending_reqs_valid[ibuf_raddr] <= 1'b0;
-            end
-        end
+//     always @(posedge clk) begin
+//         if (reset) begin
+//             pending_reqs_valid <= '0;
+//         end else begin
+//             if (ibuf_push) begin
+//                 pending_reqs_valid[ibuf_waddr] <= 1'b1;
+//             end
+//             if (ibuf_pop) begin
+//                 pending_reqs_valid[ibuf_raddr] <= 1'b0;
+//             end
+//         end
 
-        if (ibuf_push) begin
-            pending_reqs_time[ibuf_waddr] <= {req_dbg_uuid, ibuf_din, $time};
-        end
+//         if (ibuf_push) begin
+//             pending_reqs_time[ibuf_waddr] <= {req_dbg_uuid, ibuf_din, $time};
+//         end
 
-        for (integer i = 0; i < CORE_QUEUE_SIZE; ++i) begin
-            if (pending_reqs_valid[i]) begin
-                `ASSERT(($time - pending_reqs_time[i][63:0]) < STALL_TIMEOUT,
-                    ("%t: *** %s response timeout: tag=0x%0h (#%0d)",
-                        $time, INSTANCE_ID, pending_reqs_time[i][64 +: TAG_ID_WIDTH], pending_reqs_time[i][64+TAG_ID_WIDTH +: `UP(UUID_WIDTH)]));
-            end
-        end
-    end
-`endif
+//         for (integer i = 0; i < CORE_QUEUE_SIZE; ++i) begin
+//             if (pending_reqs_valid[i]) begin
+//                 `ASSERT(($time - pending_reqs_time[i][63:0]) < STALL_TIMEOUT,
+//                     ("%t: *** %s response timeout: tag=0x%0h (#%0d)",
+//                         $time, INSTANCE_ID, pending_reqs_time[i][64 +: TAG_ID_WIDTH], pending_reqs_time[i][64+TAG_ID_WIDTH +: `UP(UUID_WIDTH)]));
+//             end
+//         end
+//     end
+// `endif
 
     ///////////////////////////////////////////////////////////////////////////
 
-`ifdef DBG_TRACE_MEM
-    wire [`UP(UUID_WIDTH)-1:0] mem_req_dbg_uuid;
-    wire [`UP(UUID_WIDTH)-1:0] mem_rsp_dbg_uuid;
-    wire [`UP(UUID_WIDTH)-1:0] rsp_dbg_uuid;
+// `ifdef DBG_TRACE_MEM
+//     wire [`UP(UUID_WIDTH)-1:0] mem_req_dbg_uuid;
+//     wire [`UP(UUID_WIDTH)-1:0] mem_rsp_dbg_uuid;
+//     wire [`UP(UUID_WIDTH)-1:0] rsp_dbg_uuid;
 
-    if (UUID_WIDTH != 0) begin : g_dbg_uuid
-        assign mem_req_dbg_uuid = mem_req_tag_s[MEM_TAG_WIDTH-1 -: UUID_WIDTH];
-        assign mem_rsp_dbg_uuid = mem_rsp_tag_s[MEM_TAG_WIDTH-1 -: UUID_WIDTH];
-        assign rsp_dbg_uuid     = core_rsp_tag[TAG_WIDTH-1 -: UUID_WIDTH];
-    end else begin : g_dbg_uuid_0
-        assign mem_req_dbg_uuid = '0;
-        assign mem_rsp_dbg_uuid = '0;
-        assign rsp_dbg_uuid     = '0;
-    end
+//     if (UUID_WIDTH != 0) begin : g_dbg_uuid
+//         assign mem_req_dbg_uuid = mem_req_tag_s[MEM_TAG_WIDTH-1 -: UUID_WIDTH];
+//         assign mem_rsp_dbg_uuid = mem_rsp_tag_s[MEM_TAG_WIDTH-1 -: UUID_WIDTH];
+//         assign rsp_dbg_uuid     = core_rsp_tag[TAG_WIDTH-1 -: UUID_WIDTH];
+//     end else begin : g_dbg_uuid_0
+//         assign mem_req_dbg_uuid = '0;
+//         assign mem_rsp_dbg_uuid = '0;
+//         assign rsp_dbg_uuid     = '0;
+//     end
 
-    wire [CORE_QUEUE_ADDRW-1:0] ibuf_waddr_s = mem_req_tag_s[MEM_BATCH_BITS +: CORE_QUEUE_ADDRW];
+//     wire [CORE_QUEUE_ADDRW-1:0] ibuf_waddr_s = mem_req_tag_s[MEM_BATCH_BITS +: CORE_QUEUE_ADDRW];
 
-    wire mem_req_fire_s = mem_req_valid_s && mem_req_ready_s;
+//     wire mem_req_fire_s = mem_req_valid_s && mem_req_ready_s;
 
-    always @(posedge clk) begin
-        if (core_req_fire) begin
-            if (core_req_rw) begin
-                `TRACE(2, ("%t: %s core-req-wr: valid=%b, addr=", $time, INSTANCE_ID, core_req_mask))
-                `TRACE_ARRAY1D(2, "0x%h", core_req_addr, CORE_REQS)
-                `TRACE(2, (", byteen="))
-                `TRACE_ARRAY1D(2, "0x%h", core_req_byteen, CORE_REQS)
-                `TRACE(2, (", data="))
-                `TRACE_ARRAY1D(2, "0x%0h", core_req_data, CORE_REQS)
-            end else begin
-                `TRACE(2, ("%t: %s core-req-rd: valid=%b, addr=", $time, INSTANCE_ID, core_req_mask))
-                `TRACE_ARRAY1D(2, "0x%h", core_req_addr, CORE_REQS)
-            end
-            `TRACE(2, (", tag=0x%0h (#%0d)\n", core_req_tag, req_dbg_uuid))
-        end
-        if (core_rsp_valid && core_rsp_ready) begin
-            `TRACE(2, ("%t: %s core-rsp: valid=%b, sop=%b, eop=%b, data=", $time, INSTANCE_ID, core_rsp_mask, core_rsp_sop, core_rsp_eop))
-            `TRACE_ARRAY1D(2, "0x%0h", core_rsp_data, CORE_REQS)
-            `TRACE(2, (", tag=0x%0h (#%0d)\n", core_rsp_tag, rsp_dbg_uuid))
-        end
-        if (| mem_req_fire_s) begin
-            if (| mem_req_rw_s) begin
-                `TRACE(2, ("%t: %s mem-req-wr: valid=%b, addr=", $time, INSTANCE_ID, mem_req_mask_s))
-                `TRACE_ARRAY1D(2, "0x%h", mem_req_addr_s, CORE_CHANNELS)
-                `TRACE(2, (", byteen="))
-                `TRACE_ARRAY1D(2, "0x%h", mem_req_byteen_s, CORE_CHANNELS)
-                `TRACE(2, (", data="))
-                `TRACE_ARRAY1D(2, "0x%0h", mem_req_data_s, CORE_CHANNELS)
-            end else begin
-                `TRACE(2, ("%t: %s mem-req-rd: valid=%b, addr=", $time, INSTANCE_ID, mem_req_mask_s))
-                `TRACE_ARRAY1D(2, "0x%h", mem_req_addr_s, CORE_CHANNELS)
-            end
-            `TRACE(2, (", ibuf_idx=%0d, batch_idx=%0d (#%0d)\n", ibuf_waddr_s, req_batch_idx, mem_req_dbg_uuid))
-        end
-        if (mem_rsp_valid_s && mem_rsp_ready_s) begin
-            `TRACE(2, ("%t: %s mem-rsp: valid=%b, data=", $time, INSTANCE_ID, mem_rsp_mask_s))
-            `TRACE_ARRAY1D(2, "0x%0h", mem_rsp_data_s, CORE_CHANNELS)
-            `TRACE(2, (", ibuf_idx=%0d, batch_idx=%0d (#%0d)\n", ibuf_raddr, rsp_batch_idx, mem_rsp_dbg_uuid))
-        end
-    end
-`endif
+//     always @(posedge clk) begin
+//         if (core_req_fire) begin
+//             if (core_req_rw) begin
+//                 `TRACE(2, ("%t: %s core-req-wr: valid=%b, addr=", $time, INSTANCE_ID, core_req_mask))
+//                 `TRACE_ARRAY1D(2, "0x%h", core_req_addr, CORE_REQS)
+//                 `TRACE(2, (", byteen="))
+//                 `TRACE_ARRAY1D(2, "0x%h", core_req_byteen, CORE_REQS)
+//                 `TRACE(2, (", data="))
+//                 `TRACE_ARRAY1D(2, "0x%0h", core_req_data, CORE_REQS)
+//             end else begin
+//                 `TRACE(2, ("%t: %s core-req-rd: valid=%b, addr=", $time, INSTANCE_ID, core_req_mask))
+//                 `TRACE_ARRAY1D(2, "0x%h", core_req_addr, CORE_REQS)
+//             end
+//             `TRACE(2, (", tag=0x%0h (#%0d)\n", core_req_tag, req_dbg_uuid))
+//         end
+//         if (core_rsp_valid && core_rsp_ready) begin
+//             `TRACE(2, ("%t: %s core-rsp: valid=%b, sop=%b, eop=%b, data=", $time, INSTANCE_ID, core_rsp_mask, core_rsp_sop, core_rsp_eop))
+//             `TRACE_ARRAY1D(2, "0x%0h", core_rsp_data, CORE_REQS)
+//             `TRACE(2, (", tag=0x%0h (#%0d)\n", core_rsp_tag, rsp_dbg_uuid))
+//         end
+//         if (| mem_req_fire_s) begin
+//             if (| mem_req_rw_s) begin
+//                 `TRACE(2, ("%t: %s mem-req-wr: valid=%b, addr=", $time, INSTANCE_ID, mem_req_mask_s))
+//                 `TRACE_ARRAY1D(2, "0x%h", mem_req_addr_s, CORE_CHANNELS)
+//                 `TRACE(2, (", byteen="))
+//                 `TRACE_ARRAY1D(2, "0x%h", mem_req_byteen_s, CORE_CHANNELS)
+//                 `TRACE(2, (", data="))
+//                 `TRACE_ARRAY1D(2, "0x%0h", mem_req_data_s, CORE_CHANNELS)
+//             end else begin
+//                 `TRACE(2, ("%t: %s mem-req-rd: valid=%b, addr=", $time, INSTANCE_ID, mem_req_mask_s))
+//                 `TRACE_ARRAY1D(2, "0x%h", mem_req_addr_s, CORE_CHANNELS)
+//             end
+//             `TRACE(2, (", ibuf_idx=%0d, batch_idx=%0d (#%0d)\n", ibuf_waddr_s, req_batch_idx, mem_req_dbg_uuid))
+//         end
+//         if (mem_rsp_valid_s && mem_rsp_ready_s) begin
+//             `TRACE(2, ("%t: %s mem-rsp: valid=%b, data=", $time, INSTANCE_ID, mem_rsp_mask_s))
+//             `TRACE_ARRAY1D(2, "0x%0h", mem_rsp_data_s, CORE_CHANNELS)
+//             `TRACE(2, (", ibuf_idx=%0d, batch_idx=%0d (#%0d)\n", ibuf_raddr, rsp_batch_idx, mem_rsp_dbg_uuid))
+//         end
+//     end
+// `endif
 
 endmodule
 `TRACING_ON

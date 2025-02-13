@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_mem_unit_top import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID = "",
+    // parameter `STRING INSTANCE_ID = "",
     parameter LSU_WORD_WIDTH = LSU_WORD_SIZE * 8
 ) (
     // Clock
@@ -113,7 +113,7 @@ module VX_mem_unit_top import VX_gpu_pkg::*; #(
 `endif
 
     VX_mem_unit #(
-        .INSTANCE_ID (INSTANCE_ID)
+        // .INSTANCE_ID (INSTANCE_ID)
     ) mem_unit (
         .clk           (clk),
         .reset         (reset),

@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_local_mem import VX_gpu_pkg::*; #(
-    parameter `STRING  INSTANCE_ID = "",
+    // parameter `STRING  INSTANCE_ID = "",
 
     // Size of cache in bytes
     parameter SIZE              = (1024*16*8),
@@ -48,7 +48,7 @@ module VX_local_mem import VX_gpu_pkg::*; #(
 
     VX_mem_bus_if.slave mem_bus_if [NUM_REQS]
 );
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
     `UNUSED_PARAM (UUID_WIDTH)
 
     localparam REQ_SEL_BITS    = `CLOG2(NUM_REQS);
@@ -293,62 +293,62 @@ module VX_local_mem import VX_gpu_pkg::*; #(
 
 `endif
 
-`ifdef DBG_TRACE_MEM
+// `ifdef DBG_TRACE_MEM
 
-    wire [NUM_BANKS-1:0][TAG_WIDTH-UUID_WIDTH-1:0] per_bank_req_tag_value;
-    wire [NUM_BANKS-1:0][`UP(UUID_WIDTH)-1:0] per_bank_req_uuid;
+//     wire [NUM_BANKS-1:0][TAG_WIDTH-UUID_WIDTH-1:0] per_bank_req_tag_value;
+//     wire [NUM_BANKS-1:0][`UP(UUID_WIDTH)-1:0] per_bank_req_uuid;
 
-    wire [NUM_BANKS-1:0][TAG_WIDTH-UUID_WIDTH-1:0] per_bank_rsp_tag_value;
-    wire [NUM_BANKS-1:0][`UP(UUID_WIDTH)-1:0] per_bank_rsp_uuid;
+//     wire [NUM_BANKS-1:0][TAG_WIDTH-UUID_WIDTH-1:0] per_bank_rsp_tag_value;
+//     wire [NUM_BANKS-1:0][`UP(UUID_WIDTH)-1:0] per_bank_rsp_uuid;
 
-    for (genvar i = 0; i < NUM_BANKS; ++i) begin : g_per_bank_req_uuid
-        assign per_bank_req_tag_value[i] = per_bank_req_tag[i][TAG_WIDTH-UUID_WIDTH-1:0];
-        assign per_bank_rsp_tag_value[i] = per_bank_rsp_tag[i][TAG_WIDTH-UUID_WIDTH-1:0];
-        if (UUID_WIDTH != 0) begin : g_uuid
-            assign per_bank_req_uuid[i] = per_bank_req_tag[i][TAG_WIDTH-1 -: UUID_WIDTH];
-            assign per_bank_rsp_uuid[i] = per_bank_rsp_tag[i][TAG_WIDTH-1 -: UUID_WIDTH];
-        end else begin : g_no_uuid
-            assign per_bank_req_uuid[i] = 0;
-            assign per_bank_rsp_uuid[i] = 0;
-        end
-    end
+//     for (genvar i = 0; i < NUM_BANKS; ++i) begin : g_per_bank_req_uuid
+//         assign per_bank_req_tag_value[i] = per_bank_req_tag[i][TAG_WIDTH-UUID_WIDTH-1:0];
+//         assign per_bank_rsp_tag_value[i] = per_bank_rsp_tag[i][TAG_WIDTH-UUID_WIDTH-1:0];
+//         if (UUID_WIDTH != 0) begin : g_uuid
+//             assign per_bank_req_uuid[i] = per_bank_req_tag[i][TAG_WIDTH-1 -: UUID_WIDTH];
+//             assign per_bank_rsp_uuid[i] = per_bank_rsp_tag[i][TAG_WIDTH-1 -: UUID_WIDTH];
+//         end else begin : g_no_uuid
+//             assign per_bank_req_uuid[i] = 0;
+//             assign per_bank_rsp_uuid[i] = 0;
+//         end
+//     end
 
-    for (genvar i = 0; i < NUM_REQS; ++i) begin : g_req_trace
-        always @(posedge clk) begin
-            if (mem_bus_if[i].req_valid && mem_bus_if[i].req_ready) begin
-                if (mem_bus_if[i].req_data.rw) begin
-                    `TRACE(2, ("%t: %s core-wr-req[%0d]: addr=0x%0h, byteen=0x%h, data=0x%h, tag=0x%0h (#%0d)\n",
-                        $time, INSTANCE_ID, i, mem_bus_if[i].req_data.addr, mem_bus_if[i].req_data.byteen, mem_bus_if[i].req_data.data, mem_bus_if[i].req_data.tag.value, mem_bus_if[i].req_data.tag.uuid))
-                end else begin
-                    `TRACE(2, ("%t: %s core-rd-req[%0d]: addr=0x%0h, tag=0x%0h (#%0d)\n",
-                        $time, INSTANCE_ID, i, mem_bus_if[i].req_data.addr, mem_bus_if[i].req_data.tag.value, mem_bus_if[i].req_data.tag.uuid))
-                end
-            end
-            if (mem_bus_if[i].rsp_valid && mem_bus_if[i].rsp_ready) begin
-                `TRACE(2, ("%t: %s core-rd-rsp[%0d]: data=0x%h, tag=0x%0h (#%0d)\n",
-                    $time, INSTANCE_ID, i, mem_bus_if[i].rsp_data.data, mem_bus_if[i].rsp_data.tag.value, mem_bus_if[i].rsp_data.tag.uuid))
-            end
-        end
-    end
+//     for (genvar i = 0; i < NUM_REQS; ++i) begin : g_req_trace
+//         always @(posedge clk) begin
+//             if (mem_bus_if[i].req_valid && mem_bus_if[i].req_ready) begin
+//                 if (mem_bus_if[i].req_data.rw) begin
+//                     `TRACE(2, ("%t: %s core-wr-req[%0d]: addr=0x%0h, byteen=0x%h, data=0x%h, tag=0x%0h (#%0d)\n",
+//                         $time, INSTANCE_ID, i, mem_bus_if[i].req_data.addr, mem_bus_if[i].req_data.byteen, mem_bus_if[i].req_data.data, mem_bus_if[i].req_data.tag.value, mem_bus_if[i].req_data.tag.uuid))
+//                 end else begin
+//                     `TRACE(2, ("%t: %s core-rd-req[%0d]: addr=0x%0h, tag=0x%0h (#%0d)\n",
+//                         $time, INSTANCE_ID, i, mem_bus_if[i].req_data.addr, mem_bus_if[i].req_data.tag.value, mem_bus_if[i].req_data.tag.uuid))
+//                 end
+//             end
+//             if (mem_bus_if[i].rsp_valid && mem_bus_if[i].rsp_ready) begin
+//                 `TRACE(2, ("%t: %s core-rd-rsp[%0d]: data=0x%h, tag=0x%0h (#%0d)\n",
+//                     $time, INSTANCE_ID, i, mem_bus_if[i].rsp_data.data, mem_bus_if[i].rsp_data.tag.value, mem_bus_if[i].rsp_data.tag.uuid))
+//             end
+//         end
+//     end
 
-    for (genvar i = 0; i < NUM_BANKS; ++i) begin : g_bank_trace
-        always @(posedge clk) begin
-            if (per_bank_req_valid[i] && per_bank_req_ready[i]) begin
-                if (per_bank_req_rw[i]) begin
-                    `TRACE(2, ("%t: %s bank-wr-req[%0d]: addr=0x%0h, byteen=0x%h, data=0x%h, tag=0x%0h (#%0d)\n",
-                        $time, INSTANCE_ID, i, per_bank_req_addr[i], per_bank_req_byteen[i], per_bank_req_data[i], per_bank_req_tag_value[i], per_bank_req_uuid[i]))
-                end else begin
-                    `TRACE(2, ("%t: %s bank-rd-req[%0d]: addr=0x%0h, tag=0x%0h (#%0d)\n",
-                        $time, INSTANCE_ID, i, per_bank_req_addr[i], per_bank_req_tag_value[i], per_bank_req_uuid[i]))
-                end
-            end
-            if (per_bank_rsp_valid[i] && per_bank_rsp_ready[i]) begin
-                `TRACE(2, ("%t: %s bank-rd-rsp[%0d]: data=0x%h, tag=0x%0h (#%0d)\n",
-                    $time, INSTANCE_ID, i, per_bank_rsp_data[i], per_bank_rsp_tag_value[i], per_bank_rsp_uuid[i]))
-            end
-        end
-    end
+//     for (genvar i = 0; i < NUM_BANKS; ++i) begin : g_bank_trace
+//         always @(posedge clk) begin
+//             if (per_bank_req_valid[i] && per_bank_req_ready[i]) begin
+//                 if (per_bank_req_rw[i]) begin
+//                     `TRACE(2, ("%t: %s bank-wr-req[%0d]: addr=0x%0h, byteen=0x%h, data=0x%h, tag=0x%0h (#%0d)\n",
+//                         $time, INSTANCE_ID, i, per_bank_req_addr[i], per_bank_req_byteen[i], per_bank_req_data[i], per_bank_req_tag_value[i], per_bank_req_uuid[i]))
+//                 end else begin
+//                     `TRACE(2, ("%t: %s bank-rd-req[%0d]: addr=0x%0h, tag=0x%0h (#%0d)\n",
+//                         $time, INSTANCE_ID, i, per_bank_req_addr[i], per_bank_req_tag_value[i], per_bank_req_uuid[i]))
+//                 end
+//             end
+//             if (per_bank_rsp_valid[i] && per_bank_rsp_ready[i]) begin
+//                 `TRACE(2, ("%t: %s bank-rd-rsp[%0d]: data=0x%h, tag=0x%0h (#%0d)\n",
+//                     $time, INSTANCE_ID, i, per_bank_rsp_data[i], per_bank_rsp_tag_value[i], per_bank_rsp_uuid[i]))
+//             end
+//         end
+//     end
 
-`endif
+// `endif
 
 endmodule

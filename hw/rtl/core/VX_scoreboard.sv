@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_scoreboard import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID = ""
+    // parameter `STRING INSTANCE_ID = ""
 ) (
     input wire              clk,
     input wire              reset,

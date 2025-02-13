@@ -118,23 +118,23 @@ module VX_cache_repl #(
             wire [LRU_WIDTH-1:0] plru_wdata;
             wire [LRU_WIDTH-1:0] plru_wmask;
 
-            VX_dp_ram #(
-                .DATAW (LRU_WIDTH),
-                .SIZE  (`CS_LINES_PER_BANK),
-                .WRENW (LRU_WIDTH),
-                .RDW_MODE ("R"),
-                .RADDR_REG (1)
-            ) plru_store (
-                .clk   (clk),
-                .reset (1'b0),
-                .read  (repl_valid),
-                .write (init || (lookup_valid && lookup_hit)),
-                .wren  (init ? '1 : plru_wmask),
-                .waddr (lookup_line),
-                .raddr (repl_line),
-                .wdata (init ? '0 : plru_wdata),
-                .rdata (plru_rdata)
-            );
+            // VX_dp_ram #(
+            //     .DATAW (LRU_WIDTH),
+            //     .SIZE  (`CS_LINES_PER_BANK),
+            //     .WRENW (LRU_WIDTH),
+            //     .RDW_MODE ("R"),
+            //     .RADDR_REG (1)
+            // ) plru_store (
+            //     .clk   (clk),
+            //     .reset (1'b0),
+            //     .read  (repl_valid),
+            //     .write (init || (lookup_valid && lookup_hit)),
+            //     .wren  (init ? '1 : plru_wmask),
+            //     .waddr (lookup_line),
+            //     .raddr (repl_line),
+            //     .wdata (init ? '0 : plru_wdata),
+            //     .rdata (plru_rdata)
+            // );
 
             plru_decoder #(
                 .NUM_WAYS (NUM_WAYS)

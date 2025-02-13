@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_ibuffer import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID = ""
+    // parameter `STRING INSTANCE_ID = ""
 ) (
     input wire          clk,
     input wire          reset,
@@ -29,7 +29,7 @@ module VX_ibuffer import VX_gpu_pkg::*; #(
     // outputs
     VX_ibuffer_if.master ibuffer_if [PER_ISSUE_WARPS]
 );
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
     localparam DATAW = `UUID_WIDTH + `NUM_THREADS + `PC_BITS + 1 + `EX_BITS + `INST_OP_BITS + `INST_ARGS_BITS + (`NR_BITS * 4);
 
     wire [PER_ISSUE_WARPS-1:0] ibuf_ready_in;

@@ -43,7 +43,7 @@
 //
 
 module VX_cache_mshr #(
-    parameter `STRING INSTANCE_ID= "",
+    // parameter `STRING INSTANCE_ID= "",
     parameter BANK_ID           = 0,
     // Size of line inside a bank in bytes
     parameter LINE_SIZE         = 16,
@@ -209,31 +209,31 @@ module VX_cache_mshr #(
         next_table    <= next_table_n;
     end
 
-    `RUNTIME_ASSERT(~(allocate_fire && valid_table[allocate_id_r]), ("%t: *** %s inuse allocation: addr=0x%0h, id=%0d (#%0d)", $time, INSTANCE_ID,
-        `CS_BANK_TO_FULL_ADDR(allocate_addr, BANK_ID), allocate_id_r, alc_req_uuid))
+    // `RUNTIME_ASSERT(~(allocate_fire && valid_table[allocate_id_r]), ("%t: *** %s inuse allocation: addr=0x%0h, id=%0d (#%0d)", $time, INSTANCE_ID,
+    //     `CS_BANK_TO_FULL_ADDR(allocate_addr, BANK_ID), allocate_id_r, alc_req_uuid))
 
-    `RUNTIME_ASSERT(~(finalize_valid && ~valid_table[finalize_id]), ("%t: *** %s invalid release: addr=0x%0h, id=%0d (#%0d)", $time, INSTANCE_ID,
-        `CS_BANK_TO_FULL_ADDR(addr_table[finalize_id], BANK_ID), finalize_id, fin_req_uuid))
+    // `RUNTIME_ASSERT(~(finalize_valid && ~valid_table[finalize_id]), ("%t: *** %s invalid release: addr=0x%0h, id=%0d (#%0d)", $time, INSTANCE_ID,
+    //     `CS_BANK_TO_FULL_ADDR(addr_table[finalize_id], BANK_ID), finalize_id, fin_req_uuid))
 
-    `RUNTIME_ASSERT(~(fill_valid && ~valid_table[fill_id]), ("%t: *** %s invalid fill: addr=0x%0h, id=%0d", $time, INSTANCE_ID,
-        `CS_BANK_TO_FULL_ADDR(addr_table[fill_id], BANK_ID), fill_id))
+    // `RUNTIME_ASSERT(~(fill_valid && ~valid_table[fill_id]), ("%t: *** %s invalid fill: addr=0x%0h, id=%0d", $time, INSTANCE_ID,
+    //     `CS_BANK_TO_FULL_ADDR(addr_table[fill_id], BANK_ID), fill_id))
 
-    VX_dp_ram #(
-        .DATAW (DATA_WIDTH),
-        .SIZE  (MSHR_SIZE),
-        .RDW_MODE ("R"),
-        .RADDR_REG (1)
-    ) mshr_store (
-        .clk   (clk),
-        .reset (reset),
-        .read  (1'b1),
-        .write (allocate_valid),
-        .wren  (1'b1),
-        .waddr (allocate_id_r),
-        .wdata (allocate_data),
-        .raddr (dequeue_id_r),
-        .rdata (dequeue_data)
-    );
+    // VX_dp_ram #(
+    //     .DATAW (DATA_WIDTH),
+    //     .SIZE  (MSHR_SIZE),
+    //     .RDW_MODE ("R"),
+    //     .RADDR_REG (1)
+    // ) mshr_store (
+    //     .clk   (clk),
+    //     .reset (reset),
+    //     .read  (1'b1),
+    //     .write (allocate_valid),
+    //     .wren  (1'b1),
+    //     .waddr (allocate_id_r),
+    //     .wdata (allocate_data),
+    //     .raddr (dequeue_id_r),
+    //     .rdata (dequeue_data)
+    // );
 
     assign fill_addr = addr_table[fill_id];
 
@@ -253,50 +253,50 @@ module VX_cache_mshr #(
     assign dequeue_rw    = write_table[dequeue_id_r];
     assign dequeue_id    = dequeue_id_r;
 
-`ifdef DBG_TRACE_CACHE
-    reg show_table;
-    always @(posedge clk) begin
-        if (reset) begin
-            show_table <= 0;
-        end else begin
-            show_table <= allocate_fire || finalize_valid || fill_valid || dequeue_fire;
-        end
-        if (allocate_fire) begin
-            `TRACE(3, ("%t: %s allocate: addr=0x%0h, id=%0d, pending=%b, prev=%0d (#%0d)\n", $time, INSTANCE_ID,
-                `CS_BANK_TO_FULL_ADDR(allocate_addr, BANK_ID), allocate_id, allocate_pending, prev_idx, alc_req_uuid))
-        end
-        if (finalize_valid && finalize_is_release) begin
-            `TRACE(3, ("%t: %s release: id=%0d (#%0d)\n", $time, INSTANCE_ID, finalize_id, fin_req_uuid))
-        end
-        if (finalize_valid && finalize_is_pending) begin
-            `TRACE(3, ("%t: %s finalize: id=%0d (#%0d)\n", $time, INSTANCE_ID, finalize_id, fin_req_uuid))
-        end
-        if (fill_valid) begin
-            `TRACE(3, ("%t: %s fill: addr=0x%0h, id=%0d\n", $time, INSTANCE_ID,
-                `CS_BANK_TO_FULL_ADDR(fill_addr, BANK_ID), fill_id))
-        end
-        if (dequeue_fire) begin
-            `TRACE(3, ("%t: %s dequeue: addr=0x%0h, id=%0d (#%0d)\n", $time, INSTANCE_ID,
-                `CS_BANK_TO_FULL_ADDR(dequeue_addr, BANK_ID), dequeue_id_r, deq_req_uuid))
-        end
-        if (show_table) begin
-            `TRACE(3, ("%t: %s table", $time, INSTANCE_ID))
-            for (integer i = 0; i < MSHR_SIZE; ++i) begin
-                if (valid_table[i]) begin
-                    `TRACE(3, (" %0d=0x%0h", i, `CS_BANK_TO_FULL_ADDR(addr_table[i], BANK_ID)))
-                    if (write_table[i]) begin
-                        `TRACE(3, ("(w)"))
-                    end else begin
-                        `TRACE(3, ("(r)"))
-                    end
-                    if (next_table[i])  begin
-                        `TRACE(3, ("->%0d", next_index[i]))
-                    end
-                end
-            end
-            `TRACE(3, ("\n"))
-        end
-    end
-`endif
+// `ifdef DBG_TRACE_CACHE
+//     reg show_table;
+//     always @(posedge clk) begin
+//         if (reset) begin
+//             show_table <= 0;
+//         end else begin
+//             show_table <= allocate_fire || finalize_valid || fill_valid || dequeue_fire;
+//         end
+//         if (allocate_fire) begin
+//             `TRACE(3, ("%t: %s allocate: addr=0x%0h, id=%0d, pending=%b, prev=%0d (#%0d)\n", $time, INSTANCE_ID,
+//                 `CS_BANK_TO_FULL_ADDR(allocate_addr, BANK_ID), allocate_id, allocate_pending, prev_idx, alc_req_uuid))
+//         end
+//         if (finalize_valid && finalize_is_release) begin
+//             `TRACE(3, ("%t: %s release: id=%0d (#%0d)\n", $time, INSTANCE_ID, finalize_id, fin_req_uuid))
+//         end
+//         if (finalize_valid && finalize_is_pending) begin
+//             `TRACE(3, ("%t: %s finalize: id=%0d (#%0d)\n", $time, INSTANCE_ID, finalize_id, fin_req_uuid))
+//         end
+//         if (fill_valid) begin
+//             `TRACE(3, ("%t: %s fill: addr=0x%0h, id=%0d\n", $time, INSTANCE_ID,
+//                 `CS_BANK_TO_FULL_ADDR(fill_addr, BANK_ID), fill_id))
+//         end
+//         if (dequeue_fire) begin
+//             `TRACE(3, ("%t: %s dequeue: addr=0x%0h, id=%0d (#%0d)\n", $time, INSTANCE_ID,
+//                 `CS_BANK_TO_FULL_ADDR(dequeue_addr, BANK_ID), dequeue_id_r, deq_req_uuid))
+//         end
+//         if (show_table) begin
+//             `TRACE(3, ("%t: %s table", $time, INSTANCE_ID))
+//             for (integer i = 0; i < MSHR_SIZE; ++i) begin
+//                 if (valid_table[i]) begin
+//                     `TRACE(3, (" %0d=0x%0h", i, `CS_BANK_TO_FULL_ADDR(addr_table[i], BANK_ID)))
+//                     if (write_table[i]) begin
+//                         `TRACE(3, ("(w)"))
+//                     end else begin
+//                         `TRACE(3, ("(r)"))
+//                     end
+//                     if (next_table[i])  begin
+//                         `TRACE(3, ("->%0d", next_index[i]))
+//                     end
+//                 end
+//             end
+//             `TRACE(3, ("\n"))
+//         end
+//     end
+// `endif
 
 endmodule

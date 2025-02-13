@@ -74,7 +74,7 @@ module VX_priority_encoder #(
 
         VX_scan #(
             .N  (N),
-            .OP ("|")
+            .OP (2)
         ) scan (
             .data_in  (reversed),
             .data_out (scan_lo)

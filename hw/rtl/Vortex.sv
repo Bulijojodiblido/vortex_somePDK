@@ -73,7 +73,7 @@ module Vortex import VX_gpu_pkg::*; (
     `RESET_RELAY (l3_reset, reset);
 
     VX_cache_wrap #(
-        .INSTANCE_ID    ("l3cache"),
+        // .INSTANCE_ID    ("l3cache"),
         .CACHE_SIZE     (`L3_CACHE_SIZE),
         .LINE_SIZE      (`L3_LINE_SIZE),
         .NUM_BANKS      (`L3_NUM_BANKS),
@@ -141,7 +141,7 @@ module Vortex import VX_gpu_pkg::*; (
 
         VX_cluster #(
             .CLUSTER_ID (cluster_id),
-            .INSTANCE_ID (`SFORMATF(("cluster%0d", cluster_id)))
+            // .INSTANCE_ID (`SFORMATF(("cluster%0d", cluster_id)))
         ) cluster (
             `SCOPE_IO_BIND (scope_cluster + cluster_id)
 

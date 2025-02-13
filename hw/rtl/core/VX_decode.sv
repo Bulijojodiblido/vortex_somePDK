@@ -28,7 +28,7 @@
 `endif
 
 module VX_decode import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID = ""
+    // parameter `STRING INSTANCE_ID = ""
 ) (
     input wire              clk,
     input wire              reset,
@@ -43,7 +43,7 @@ module VX_decode import VX_gpu_pkg::*; #(
 
     localparam DATAW = `UUID_WIDTH + `NW_WIDTH + `NUM_THREADS + `PC_BITS + `EX_BITS + `INST_OP_BITS + `INST_ARGS_BITS + 1 + (`NR_BITS * 4);
 
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
     `UNUSED_VAR (clk)
     `UNUSED_VAR (reset)
 

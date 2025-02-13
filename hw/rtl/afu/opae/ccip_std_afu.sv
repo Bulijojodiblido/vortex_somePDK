@@ -7,7 +7,7 @@
 
 `ifndef NOPAE
 
-`include "platform_if.vh"
+// `include "platform_if.vh"
 
 import local_mem_cfg_pkg::*;
 

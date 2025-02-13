@@ -12,9 +12,8 @@
 // limitations under the License.
 
 `include "VX_define.vh"
-
 module VX_alu_unit #(
-    parameter `STRING INSTANCE_ID = ""
+    // parameter `STRING INSTANCE_ID = ""
 ) (
     input wire              clk,
     input wire              reset,
@@ -27,7 +26,7 @@ module VX_alu_unit #(
     VX_branch_ctl_if.master branch_ctl_if [`NUM_ALU_BLOCKS]
 );
 
-    `UNUSED_SPARAM (INSTANCE_ID)
+    // `UNUSED_SPARAM (INSTANCE_ID)
     localparam BLOCK_SIZE   = `NUM_ALU_BLOCKS;
     localparam NUM_LANES    = `NUM_ALU_LANES;
     localparam PARTIAL_BW   = (BLOCK_SIZE != `ISSUE_WIDTH) || (NUM_LANES != `NUM_THREADS);
@@ -75,7 +74,7 @@ module VX_alu_unit #(
         VX_pe_switch #(
             .PE_COUNT    (PE_COUNT),
             .NUM_LANES   (NUM_LANES),
-            .ARBITER     ("R"),
+            .ARBITER     (1),
             .REQ_OUT_BUF (0),
             .RSP_OUT_BUF (PARTIAL_BW ? 1 : 3)
         ) pe_switch (
@@ -89,7 +88,7 @@ module VX_alu_unit #(
         );
 
         VX_alu_int #(
-            .INSTANCE_ID (`SFORMATF(("%s-int%0d", INSTANCE_ID, block_idx))),
+            // .INSTANCE_ID (`SFORMATF(("%s-int%0d", INSTANCE_ID, block_idx))),
             .BLOCK_IDX (block_idx),
             .NUM_LANES (NUM_LANES)
         ) alu_int (
@@ -102,7 +101,7 @@ module VX_alu_unit #(
 
     `ifdef EXT_M_ENABLE
         VX_alu_muldiv #(
-            .INSTANCE_ID (`SFORMATF(("%s-muldiv%0d", INSTANCE_ID, block_idx))),
+            // .INSTANCE_ID (`SFORMATF(("%s-muldiv%0d", INSTANCE_ID, block_idx))),
             .NUM_LANES (NUM_LANES)
         ) muldiv_unit (
             .clk        (clk),

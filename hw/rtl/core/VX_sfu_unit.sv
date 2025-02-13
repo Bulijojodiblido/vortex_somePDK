@@ -14,7 +14,7 @@
 `include "VX_define.vh"
 
 module VX_sfu_unit import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID = "",
+    // parameter `STRING INSTANCE_ID = "",
     parameter CORE_ID = 0
 ) (
     input wire              clk,
@@ -85,7 +85,7 @@ module VX_sfu_unit import VX_gpu_pkg::*; #(
     VX_pe_switch #(
         .PE_COUNT   (PE_COUNT),
         .NUM_LANES  (NUM_LANES),
-        .ARBITER    ("R"),
+        .ARBITER    (1),
         .REQ_OUT_BUF(0),
         .RSP_OUT_BUF(3)
     ) pe_switch (
@@ -99,7 +99,7 @@ module VX_sfu_unit import VX_gpu_pkg::*; #(
     );
 
     VX_wctl_unit #(
-        .INSTANCE_ID (`SFORMATF(("%s-wctl", INSTANCE_ID))),
+        // .INSTANCE_ID (`SFORMATF(("%s-wctl", INSTANCE_ID))),
         .NUM_LANES (NUM_LANES)
     ) wctl_unit (
         .clk        (clk),
@@ -110,7 +110,7 @@ module VX_sfu_unit import VX_gpu_pkg::*; #(
     );
 
     VX_csr_unit #(
-        .INSTANCE_ID (`SFORMATF(("%s-csr", INSTANCE_ID))),
+        // .INSTANCE_ID (`SFORMATF(("%s-csr", INSTANCE_ID))),
         .CORE_ID   (CORE_ID),
         .NUM_LANES (NUM_LANES)
     ) csr_unit (

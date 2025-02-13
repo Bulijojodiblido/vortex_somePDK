@@ -19,7 +19,7 @@
 `TRACING_OFF
 module VX_scan #(
     parameter N       = 1,
-    parameter `STRING OP = "^",  // ^: XOR, &: AND, |: OR
+    parameter OP = 0,  // ^: XOR 0, &: AND 1, |: OR 2
     parameter REVERSE = 0        // 0: LO->HI, 1: HI->LO
 ) (
     input  wire [N-1:0] data_in,
@@ -39,24 +39,24 @@ module VX_scan #(
     end
 
     // optimize for the common case of small and-scans
-    if ((N == 2) && (OP == "&")) begin : g_scan_n2_and
+    if ((N == 2) && (OP == 1)) begin : g_scan_n2_and
 	    assign t[LOGN] = {t[0][1], &t[0][1:0]};
-    end else if ((N == 3) && (OP == "&")) begin : g_scan_n3_and
+    end else if ((N == 3) && (OP == 1)) begin : g_scan_n3_and
 	    assign t[LOGN] = {t[0][2], &t[0][2:1], &t[0][2:0]};
-    end else if ((N == 4) && (OP == "&")) begin : g_scan_n4_and
+    end else if ((N == 4) && (OP == 1)) begin : g_scan_n4_and
 	    assign t[LOGN] = {t[0][3], &t[0][3:2], &t[0][3:1], &t[0][3:0]};
     end else begin : g_scan
         // general case
         wire [N-1:0] fill;
 	    for (genvar i = 0; i < LOGN; ++i) begin : g_i
             wire [N-1:0] shifted = N'({fill, t[i]} >> (1<<i));
-            if (OP == "^") begin : g_xor
+            if (OP == 0) begin : g_xor
 		        assign fill = {N{1'b0}};
 		        assign t[i+1] = t[i] ^ shifted;
-            end else if (OP == "&") begin : g_and
+            end else if (OP == 1) begin : g_and
 		        assign fill = {N{1'b1}};
 		        assign t[i+1] = t[i] & shifted;
-            end else if (OP == "|") begin : g_or
+            end else if (OP == 2) begin : g_or
 		        assign fill = {N{1'b0}};
 		        assign t[i+1] = t[i] | shifted;
             end

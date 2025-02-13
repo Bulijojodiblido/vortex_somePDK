@@ -14,7 +14,7 @@
 `include "VX_cache_define.vh"
 
 module VX_cache import VX_gpu_pkg::*; #(
-    parameter `STRING INSTANCE_ID   = "",
+    // parameter `STRING INSTANCE_ID   = "",
 
     // Number of Word requests per cycle
     parameter NUM_REQS              = 4,
@@ -369,7 +369,7 @@ module VX_cache import VX_gpu_pkg::*; #(
     for (genvar bank_id = 0; bank_id < NUM_BANKS; ++bank_id) begin : g_banks
         VX_cache_bank #(
             .BANK_ID      (bank_id),
-            .INSTANCE_ID  (`SFORMATF(("%s-bank%0d", INSTANCE_ID, bank_id))),
+            // .INSTANCE_ID  (`SFORMATF(("%s-bank%0d", INSTANCE_ID, bank_id))),
             .CACHE_SIZE   (CACHE_SIZE),
             .LINE_SIZE    (LINE_SIZE),
             .NUM_BANKS    (NUM_BANKS),

@@ -16,7 +16,7 @@
 `TRACING_OFF
 module VX_generic_arbiter #(
     parameter NUM_REQS     = 1,
-    parameter `STRING TYPE = "P", // P: priority, R: round-robin, M: matrix, C: cyclic
+    parameter TYPE = 0, // P: priority 0, R: round-robin 1, M: matrix 2, C: cyclic 3
     parameter LOG_NUM_REQS = `LOG2UP(NUM_REQS)
 ) (
     input  wire                     clk,
@@ -27,9 +27,9 @@ module VX_generic_arbiter #(
     output wire                     grant_valid,
     input  wire                     grant_ready
 );
-    `STATIC_ASSERT((TYPE == "P" || TYPE == "R" || TYPE == "M" || TYPE == "C"), ("invalid parameter"))
+    // `STATIC_ASSERT((TYPE == "P" || TYPE == "R" || TYPE == "M" || TYPE == "C"), ("invalid parameter"))
 
-    if (TYPE == "P") begin : g_priority
+    if (TYPE == 0) begin : g_priority
 
         `UNUSED_VAR (clk)
         `UNUSED_VAR (reset)
@@ -44,7 +44,7 @@ module VX_generic_arbiter #(
             .grant_onehot (grant_onehot)
         );
 
-    end else if (TYPE == "R") begin : g_round_robin
+    end else if (TYPE == 1) begin : g_round_robin
 
         VX_rr_arbiter #(
             .NUM_REQS (NUM_REQS)
@@ -58,7 +58,7 @@ module VX_generic_arbiter #(
             .grant_ready  (grant_ready)
         );
 
-    end else if (TYPE == "M") begin : g_matrix
+    end else if (TYPE == 2) begin : g_matrix
 
         VX_matrix_arbiter #(
             .NUM_REQS (NUM_REQS)
@@ -72,7 +72,7 @@ module VX_generic_arbiter #(
             .grant_ready  (grant_ready)
         );
 
-    end else if (TYPE == "C") begin : g_cyclic
+    end else if (TYPE == 3) begin : g_cyclic
 
         VX_cyclic_arbiter #(
             .NUM_REQS (NUM_REQS)
@@ -88,7 +88,7 @@ module VX_generic_arbiter #(
 
     end
 
-    `RUNTIME_ASSERT (((~(| requests) != 1) || (grant_valid && (requests[grant_index] != 0) && (grant_onehot == (NUM_REQS'(1) << grant_index)))), ("%t: invalid arbiter grant!", $time))
+    // `RUNTIME_ASSERT (((~(| requests) != 1) || (grant_valid && (requests[grant_index] != 0) && (grant_onehot == (NUM_REQS'(1) << grant_index)))), ("%t: invalid arbiter grant!", $time))
 
 endmodule
 `TRACING_ON
